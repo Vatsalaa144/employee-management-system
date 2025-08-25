@@ -1,9 +1,17 @@
 import React from 'react'
-import Header from '../others/Header'
 import TaskListNumbers from '../others/TaskListNumbers'
 import TaskListCards from '../tasklist/TaskListCards'
 
 const EmployeeDashboard = (props) => {
+  const displayName = props.data?.firstname || 'Employee'
+  
+  const getGreeting = () => {
+    const hour = new Date().getHours()
+    if (hour < 12) return 'Good Morning'
+    if (hour < 17) return 'Good Afternoon'
+    return 'Good Evening'
+  }
+
   return (
     <div className='min-h-screen w-full bg-gradient-to-br from-indigo-50 via-white to-purple-50 relative overflow-hidden'>
       {/* Animated Background Elements */}
@@ -16,8 +24,125 @@ const EmployeeDashboard = (props) => {
       {/* Main Content */}
       <div className='relative z-10 p-4 sm:p-6 lg:p-10'>
         <div className='max-w-7xl mx-auto space-y-8'>
-          {/* Header */}
-          <Header changeUser={props.changeUser} firstName={props.data?.firstname} />
+          {/* Clean Employee Header */}
+          <div className='bg-white/80 backdrop-blur-xl border border-white/20 shadow-lg rounded-3xl p-6 sm:p-8 relative overflow-hidden'>
+            {/* Gradient Background */}
+            <div className='absolute inset-0 bg-gradient-to-r from-blue-50/50 via-indigo-50/30 to-purple-50/50 rounded-3xl'></div>
+            
+            {/* Content */}
+            <div className='relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between'>
+              {/* Left Side - Welcome */}
+              <div className='flex items-center space-x-4 mb-4 sm:mb-0'>
+                {/* Avatar */}
+                <div className='relative'>
+                  <div className='w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg'>
+                    <span className='text-2xl sm:text-3xl font-bold text-white'>
+                      {displayName.charAt(0).toUpperCase()}
+                    </span>
+                  </div>
+                  {/* Status Indicator */}
+                  <div className='absolute -bottom-1 -right-1 w-6 h-6 bg-green-400 border-3 border-white rounded-full flex items-center justify-center'>
+                    <div className='w-2 h-2 bg-green-600 rounded-full animate-pulse'></div>
+                  </div>
+                </div>
+                
+                {/* Welcome Text */}
+                <div>
+                  <div className='flex items-center space-x-2 mb-1'>
+                    <h1 className='text-lg sm:text-xl font-medium text-gray-600'>
+                      {getGreeting()}! 👋
+                    </h1>
+                    <div className='inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 border border-blue-200 shadow-sm'>
+                      <svg className='w-3 h-3 mr-1' fill='currentColor' viewBox='0 0 20 20'>
+                        <path fillRule='evenodd' d='M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z' clipRule='evenodd'/>
+                      </svg>
+                      Employee
+                    </div>
+                  </div>
+                  <div className='flex items-center space-x-2'>
+                    <span className='text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent'>
+                      {displayName}
+                    </span>
+                  </div>
+                  <p className='text-sm text-gray-500 mt-1'>
+                    {new Date().toLocaleDateString('en-US', { 
+                      weekday: 'long', 
+                      year: 'numeric', 
+                      month: 'long', 
+                      day: 'numeric' 
+                    })}
+                  </p>
+                </div>
+              </div>
+              
+              {/* Right Side - Simple Logout Button */}
+              <div className='flex items-center space-x-4 w-full sm:w-auto justify-end'>
+                {/* Task Summary */}
+                <div className='hidden sm:flex items-center space-x-4'>
+                  <div className='flex items-center space-x-2 px-4 py-2 bg-white/60 rounded-2xl border border-gray-200'>
+                    <div className='w-2 h-2 bg-green-400 rounded-full animate-pulse'></div>
+                    <span className='text-sm font-medium text-gray-700'>
+                      {props.data?.task_count?.active || 0} Active
+                    </span>
+                  </div>
+                  <div className='flex items-center space-x-2 px-4 py-2 bg-white/60 rounded-2xl border border-gray-200'>
+                    <div className='w-2 h-2 bg-blue-400 rounded-full'></div>
+                    <span className='text-sm font-medium text-gray-700'>
+                      {props.data?.task_count?.completed_task || 0} Done
+                    </span>
+                  </div>
+                </div>
+                
+                {/* Beautiful Logout Button */}
+                <button
+                  onClick={() => {
+                    localStorage.setItem('loggedInUser', '')
+                    props.changeUser('')
+                  }}
+                  className='flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-red-500 via-pink-500 to-rose-600 hover:from-red-600 hover:via-pink-600 hover:to-rose-700 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transform transition-all duration-300 hover:scale-[1.02] focus:outline-none focus:ring-4 focus:ring-red-500/25'
+                >
+                  <svg className='w-5 h-5' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                    <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1'/>
+                  </svg>
+                  <span>Logout</span>
+                </button>
+              </div>
+            </div>
+            
+            {/* Employee Quick Info Bar */}
+            <div className='mt-6 pt-6 border-t border-gray-200/50'>
+              <div className='flex flex-wrap items-center justify-between gap-4'>
+                <div className='flex items-center space-x-6'>
+                  <div className='flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-emerald-100 to-green-100 border border-emerald-200 rounded-2xl'>
+                    <svg className='w-4 h-4 text-emerald-600' fill='currentColor' viewBox='0 0 20 20'>
+                      <path fillRule='evenodd' d='M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z' clipRule='evenodd'/>
+                    </svg>
+                    <span className='text-sm font-semibold text-emerald-700'>Employee Dashboard</span>
+                  </div>
+                  
+                  <div className='text-sm text-gray-600'>
+                    Manage your tasks and track progress
+                  </div>
+                </div>
+                
+                {/* Quick Task Stats */}
+                <div className='flex items-center space-x-2'>
+                  <span className='text-xs font-medium text-gray-500'>Today:</span>
+                  <div className='flex items-center space-x-1'>
+                    <div className='px-2 py-1 text-xs font-medium bg-orange-100 text-orange-700 rounded-full border border-orange-200'>
+                      {props.data?.task_count?.new_task || 0} New
+                    </div>
+                    <div className='px-2 py-1 text-xs font-medium bg-blue-100 text-blue-700 rounded-full border border-blue-200'>
+                      {props.data?.task_count?.active || 0} Active
+                    </div>
+                    <div className='px-2 py-1 text-xs font-medium bg-green-100 text-green-700 rounded-full border border-green-200'>
+                      {props.data?.task_count?.completed_task || 0} Done
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
           
           {/* Task Statistics */}
           <TaskListNumbers data={props.data} />
