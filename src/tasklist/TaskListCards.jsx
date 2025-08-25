@@ -29,6 +29,19 @@ const TaskListCards = ({data}) => {
 
     const filteredTasks = getFilteredTasks()
 
+    const getTaskCounts = () => {
+        if (!data?.task) return { new: 0, active: 0, completed: 0, failed: 0 }
+        
+        return {
+            new: data.task.filter(task => task.new_task).length,
+            active: data.task.filter(task => task.active).length,
+            completed: data.task.filter(task => task.completed_task).length,
+            failed: data.task.filter(task => task.failed_task).length
+        }
+    }
+
+    const taskCounts = getTaskCounts()
+
     return (
         <div className='bg-white/80 backdrop-blur-xl border border-white/20 shadow-lg rounded-3xl relative overflow-hidden'>
             {/* Background Pattern */}
@@ -79,10 +92,10 @@ const TaskListCards = ({data}) => {
                                         ? 'bg-white/20 text-white' 
                                         : 'bg-gray-100 text-gray-600'
                                 }`}>
-                                    {button.key === 'new' && (data?.task_count?.new_task || 0)}
-                                    {button.key === 'active' && (data?.task_count?.active || 0)}
-                                    {button.key === 'completed' && (data?.task_count?.completed_task || 0)}
-                                    {button.key === 'failed' && (data?.task_count?.failed_task || 0)}
+                                    {button.key === 'new' && taskCounts.new}
+                                    {button.key === 'active' && taskCounts.active}
+                                    {button.key === 'completed' && taskCounts.completed}
+                                    {button.key === 'failed' && taskCounts.failed}
                                 </span>
                             )}
                         </button>
@@ -96,7 +109,7 @@ const TaskListCards = ({data}) => {
                 >
                     {filteredTasks.length > 0 ? (
                         <div 
-                            className='flex gap-6 pb-4 overflow-x-auto overflow-y-hidden'
+                            className='flex gap-6 pb-4 overflow-x-auto overflow-y-hidden items-start'
                             style={{
                                 scrollbarWidth: 'thin',
                                 scrollbarColor: 'rgba(148, 163, 184, 0.3) transparent',
@@ -104,17 +117,18 @@ const TaskListCards = ({data}) => {
                             }}
                         >
                             {filteredTasks.map((elem, idx) => {
-                                if(elem.active && (filter === 'all' || filter === 'active')){
-                                    return <AcceptTask key={`active-${idx}`} data={elem} />
+                                // Use the same logic as the original abc.jsx but with filter consideration
+                                if(elem.active){
+                                    return <AcceptTask key={`active-${elem.id || idx}`} data={elem} />
                                 }
-                                if(elem.new_task && (filter === 'all' || filter === 'new')){
-                                    return <NewTask key={`new-${idx}`} data={elem} />
+                                if(elem.new_task){
+                                    return <NewTask key={`new-${elem.id || idx}`} data={elem} />
                                 }
-                                if(elem.completed_task && (filter === 'all' || filter === 'completed')){
-                                    return <CompleteTask key={`completed-${idx}`} data={elem} />
+                                if(elem.completed_task){
+                                    return <CompleteTask key={`completed-${elem.id || idx}`} data={elem} />
                                 }
-                                if(elem.failed_task && (filter === 'all' || filter === 'failed')){
-                                    return <FailedTask key={`failed-${idx}`} data={elem} />
+                                if(elem.failed_task){
+                                    return <FailedTask key={`failed-${elem.id || idx}`} data={elem} />
                                 }
                                 return null
                             })}
@@ -182,22 +196,4 @@ const TaskListCards = ({data}) => {
     )
 }
 
-export default TaskListCardsimport React, { useState } from 'react'
-import AcceptTask from './AcceptTask'
-import NewTask from './NewTask'
-import CompleteTask from './CompleteTask'
-import FailedTask from './FailedTask'
-
-const TaskListCards = ({data}) => {
-    const [filter, setFilter] = useState('all')
-    
-    const filterButtons = [
-        { key: 'all', label: 'All Tasks', icon: '📋', color: 'indigo' },
-        { key: 'new', label: 'New', icon: '📝', color: 'blue' },
-        { key: 'active', label: 'In Progress', icon: '🚀', color: 'orange' },
-        { key: 'completed', label: 'Completed', icon: '✅', color: 'green' },
-        { key: 'failed', label: 'Failed', icon: '⚠️', color: 'red' }
-    ]
-
-    const getFilteredTasks = () => {
-        if
+export default TaskListCards
