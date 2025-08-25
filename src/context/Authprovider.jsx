@@ -1,26 +1,26 @@
 import React, { createContext, useEffect, useState } from 'react'
-import { getLocalStorage, setLocalStorage } from '../Utils/LocalStorage'
+import { getLocalStorage, setLocalStorage } from '../utils/LocalStorage'
 
 export const AuthContext = createContext()
 
-const Authprovider = ({children}) => {
- 
-    const [UserData, setUserData] = useState(null)
+const AuthProvider = ({children}) => {
     
+    const [userData, setuserData] = useState(null)
+
     useEffect(() => {
-      setLocalStorage()
-      const {employees} = getLocalStorage()
-      setUserData(employees)
-      
-    }, [])
-    
+        setLocalStorage()
+        const {employees} = getLocalStorage()
+        setuserData(employees)
+   
+    }, [])    
+
   return (
-    <div>
-        <AuthContext.Provider value={[UserData,setUserData]}>
-        {children}
+    <div className='min-h-screen bg-gradient-to-br from-slate-50 via-stone-50 to-neutral-100'>
+        <AuthContext.Provider value={[userData,setuserData]}>
+            {children}
         </AuthContext.Provider>
     </div>
   )
 }
 
-export default Authprovider
+export default AuthProvider

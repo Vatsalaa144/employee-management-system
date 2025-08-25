@@ -1,16 +1,22 @@
 @import "tailwindcss";
-*{
-    color: white;
-}
-body{
-    background-color: black;
+
+/* Global Styles */
+body {
+  @apply bg-gray-50 text-gray-900 font-sans;
 }
 
-#tasklist::-webkit-scrollbar{
-    display: none;
+h1, h2, h3, h4, h5, h6 {
+  @apply font-semibold text-gray-800;
 }
 
-#allother::-webkit-scrollbar{
-    display: none;
+button {
+  @apply px-4 py-2 rounded-lg shadow-sm transition duration-200 ease-in-out;
 }
 
+button:hover {
+  @apply shadow-md;
+}
+
+input, select, textarea {
+  @apply border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500;
+}
